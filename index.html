@@ -13,8 +13,8 @@
             padding: 0;
             display: flex;
             flex-direction: column;
-            height: 100vh; /* بياخد طول الشاشة كلها */
-            overflow: hidden; /* بيمنع ظهور سكرول للصفحة كلها */
+            height: 100vh;
+            overflow: hidden;
         }
 
         /* شريط التحكم العلوي للمشغل */
@@ -34,7 +34,6 @@
             gap: 10px;
         }
 
-        /* تصغير الزراير عشان تناسب شريط المشغل */
         .admin-btn {
             background-color: #f39c12;
             color: #000;
@@ -47,14 +46,14 @@
             transition: 0.3s;
         }
 
-        /* زراير التنقل والتدوير */
         .nav-buttons {
             display: flex;
             gap: 5px;
+            flex-wrap: wrap; /* عشان لو الشاشة صغيرة ينزلوا سطر جديد شيك */
         }
 
-        .nav-btn {
-            background-color: #3498db;
+        /* توحيد كل زراير التحكم العلوية */
+        .nav-btn, .rotate-btn, .adblock-btn, .close-top-btn, .external-top-btn {
             color: white;
             border: none;
             padding: 6px 12px;
@@ -65,40 +64,23 @@
             transition: 0.3s;
         }
 
-        .nav-btn:hover {
-            background-color: #2980b9;
-        }
+        /* ألوان الزراير المتخصصة */
+        .nav-btn { background-color: #3498db; }
+        .nav-btn:hover { background-color: #2980b9; }
 
-        .rotate-btn {
-            background-color: #9b59b6;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            font-size: 13px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-        }
+        .rotate-btn { background-color: #9b59b6; }
+        .rotate-btn:hover { background-color: #8e44ad; }
 
-        .rotate-btn:hover {
-            background-color: #8e44ad;
-        }
+        .close-top-btn { background-color: #c0392b; }
+        .close-top-btn:hover { background-color: #e74c3c; }
 
-        .adblock-btn {
-            background-color: #27ae60;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            font-size: 13px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-        }
+        .external-top-btn { background-color: #8e44ad; }
+        .external-top-btn:hover { background-color: #9b59b6; }
+
+        .adblock-btn { background-color: #27ae60; }
         .adblock-btn.disabled { background-color: #c0392b; }
 
-        /* شريط القنوات قابل للتمرير لو القنوات كترت */
+        /* شريط القنوات قابل للتمرير */
         .tabs-container {
             display: flex;
             gap: 8px;
@@ -107,7 +89,6 @@
             padding-bottom: 5px;
         }
         
-        /* تجميل شكل السكرول بار بتاع القنوات */
         .tabs-container::-webkit-scrollbar { height: 6px; }
         .tabs-container::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
 
@@ -121,7 +102,7 @@
             cursor: pointer;
             font-weight: bold;
             transition: 0.3s;
-            flex-shrink: 0; /* بيمنع الزرار يكش */
+            flex-shrink: 0;
         }
 
         .tab-btn.active {
@@ -129,67 +110,22 @@
             border: 1px solid #fff;
         }
 
-        .tab-btn.hd { background-color: #b22222; }
-
-        /* تعديل الفيديو عشان يملى باقي المساحة */
+        /* تعديل الفيديو */
         .video-wrapper {
             position: relative;
             width: 100%;
-            flex-grow: 1; /* بياخد كل المساحة المتبقية من الشاشة */
+            flex-grow: 1;
             background-color: #000;
         }
 
-        /* كلاس التدوير اللي هيتطبق على الفيديو */
         .video-wrapper.rotated iframe {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: calc(100vh - 75px); /* بنخصم مساحة الشريط اللي فوق */
+            width: calc(100vh - 75px);
             height: 100vw;
             transform: translate(-50%, -50%) rotate(90deg);
         }
-
-        .close-vid-btn {
-            position: absolute;
-            top: 10px;
-            left: 10px; 
-            background-color: rgba(255, 0, 0, 0.8);
-            color: white;
-            border: 2px solid white;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 10;
-            display: none; 
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
-        }
-        .close-vid-btn:hover { background-color: red; transform: scale(1.1); }
-
-        .external-vid-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px; 
-            background-color: rgba(41, 128, 185, 0.8); 
-            color: white;
-            border: 2px solid white;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 10;
-            display: none; 
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
-        }
-        .external-vid-btn:hover { background-color: #2980b9; transform: scale(1.1); }
 
         iframe {
             width: 100%;
@@ -197,7 +133,7 @@
             border: none;
         }
 
-        /* لوحة التعديل زي ما هي */
+        /* لوحة التعديل */
         .modal {
             display: none;
             position: fixed;
@@ -243,7 +179,7 @@
         .download-btn { background-color: #2980b9; color: white; flex: 1; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
         .copy-btn { background-color: #8e44ad; color: white; flex: 1; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
     </style>
-<style>:is([id*='google_ads_iframe'],[id*='taboola-'],.taboolaHeight,.taboola-placeholder,#top-ad,#credential_picker_container,#credentials-picker-container,#credential_picker_iframe,[id*='google-one-tap-iframe'],#google-one-tap-popup-container,.google-one-tap__module,.google-one-tap-modal-div,#amp_floatingAdDiv,#ez-content-blocker-container) {display:none!important;min-height:0!important;height:0!important;}</style></head>
+</head>
 <body>
 
     <div class="player-header">
@@ -251,12 +187,14 @@
             <button class="admin-btn" onclick="openModal()">⚙️ التعديل</button>
             
             <div class="nav-buttons">
+                <button id="closeVid" class="close-top-btn" onclick="closePlayer()" style="display: none;">إغلاق ✖</button>
+                <button id="externalVid" class="external-top-btn" onclick="openExternal()" style="display: none;">خارجي ↗</button>
                 <button class="nav-btn" onclick="prevStream()">السابق ⏮️</button>
                 <button class="nav-btn" onclick="nextStream()">التالي ⏭️</button>
                 <button class="rotate-btn" onclick="toggleRotation()">تدوير 🔄</button>
             </div>
 
-            <button id="adblockBtn" class="adblock-btn" onclick="toggleAdBlock()">🛡️ المانع (شغال)</button>
+            <button id="adblockBtn" class="adblock-btn disabled" onclick="toggleAdBlock()">🛡️ المانع (مقفول)</button>
         </div>
 
         <div class="tabs-container" id="mainTabs">
@@ -274,10 +212,7 @@
     </div>
 
     <div class="video-wrapper">
-        <button id="closeVid" class="close-vid-btn" onclick="closePlayer()" title="إغلاق المشغل" style="display: none;">✖</button>
-        <button id="externalVid" class="external-vid-btn" onclick="openExternal()" title="فتح في نافذة خارجية" style="display: none;">↗️</button>
-        
-        <iframe id="videoPlayer" src="" allowfullscreen="" sandbox="allow-scripts allow-same-origin"></iframe>
+        <iframe id="videoPlayer" src="" allowfullscreen=""></iframe>
     </div>
 
     <div id="settingsModal" class="modal" style="display: none;">
@@ -286,18 +221,7 @@
             
             <div class="form-group">
                 <label>اختار الزرار للتعديل:</label>
-                <select id="buttonSelect" onchange="loadButtonData()">
-                    <option value="btn1">قناة 6 بس</option>
-                    <option value="btn2">6</option>
-                    <option value="btn3">6</option>
-                    <option value="btn4">6</option>
-                    <option value="btn_new_1775313046421">6</option>
-                    <option value="btn_new_1775313087333">6</option>
-                    <option value="btn_new_1775313110293">6</option>
-                    <option value="btn_new_1775313127961">6</option>
-                    <option value="btn_new_1775313144818">6</option>
-                    <option value="btn_new_1775313162951">6</option>
-                <option value="btn_new_1775316025265">6</option></select>
+                <select id="buttonSelect" onchange="loadButtonData()"><option value="btn1">قناة 6 بس</option><option value="btn2">6</option><option value="btn3">6</option><option value="btn4">6</option><option value="btn_new_1775313046421">6</option><option value="btn_new_1775313087333">6</option><option value="btn_new_1775313110293">6</option><option value="btn_new_1775313127961">6</option><option value="btn_new_1775313144818">6</option><option value="btn_new_1775313162951">6</option><option value="btn_new_1775316025265">6</option></select>
             </div>
 
             <div class="form-group">
@@ -324,7 +248,21 @@
     </div>
 
     <script>
-        // دالة مانع الإعلانات
+        // سحب أسامي الزراير لقائمة التعديل
+        function populateSelectMenu() {
+            const selectMenu = document.getElementById('buttonSelect');
+            selectMenu.innerHTML = ''; 
+            document.querySelectorAll('#mainTabs .tab-btn').forEach(btn => {
+                selectMenu.innerHTML += `<option value="${btn.id}">${btn.innerText}</option>`;
+            });
+        }
+        populateSelectMenu();
+
+        // تشغيل القناة الأولى بمجرد فتح الصفحة (عشان كل الزراير تتفعل صح)
+        window.onload = function() {
+            playStream(document.getElementById('btn1'));
+        };
+
         let adblockEnabled = true;
         function toggleAdBlock() {
             let iframe = document.getElementById('videoPlayer');
@@ -352,8 +290,9 @@
             let link = btnElement.getAttribute('data-link');
             document.getElementById('videoPlayer').src = link;
             
-            document.getElementById('closeVid').style.display = 'flex';
-            document.getElementById('externalVid').style.display = 'flex';
+            // إظهار زراير الإغلاق والفتح الخارجي في الشريط العلوي كعنصر inline-block
+            document.getElementById('closeVid').style.display = 'inline-block';
+            document.getElementById('externalVid').style.display = 'inline-block';
 
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             btnElement.classList.add('active');
@@ -378,6 +317,7 @@
         }
 
         function openModal() {
+            populateSelectMenu(); 
             document.getElementById('settingsModal').style.display = 'flex';
             loadButtonData();
         }
@@ -429,11 +369,7 @@
 
             document.getElementById("mainTabs").appendChild(newBtn);
 
-            let newOption = document.createElement("option");
-            newOption.value = newId;
-            newOption.innerText = channelName;
-            document.getElementById("buttonSelect").appendChild(newOption);
-
+            populateSelectMenu();
             document.getElementById("buttonSelect").value = newId;
             loadButtonData();
 
@@ -494,5 +430,4 @@
             videoWrapper.classList.toggle('rotated');
         }
     </script>
-</body>
-</html>
+</body></html>
