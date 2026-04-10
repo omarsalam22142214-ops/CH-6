@@ -107,9 +107,11 @@
             flex-shrink: 0;
         }
 
+        /* الزرار بتاع القناة اللي شغالة حالياً (تم تعديله للأخضر) */
         .tab-btn.active {
-            background-color: #004d4d;
-            border: 1px solid #fff;
+            background-color: #27ae60 !important;
+            border: 2px solid #fff;
+            box-shadow: 0 0 10px rgba(39, 174, 96, 0.8);
         }
 
         /* تنسيقات القنوات أثناء التحديد */
@@ -312,7 +314,7 @@
         .s-close-btn { background-color: #c0392b; border: 1px solid #ff7675; }
 
     </style>
-</head>
+<style>:is([id*='google_ads_iframe'],[id*='taboola-'],.taboolaHeight,.taboola-placeholder,#top-ad,#credential_picker_container,#credentials-picker-container,#credential_picker_iframe,[id*='google-one-tap-iframe'],#google-one-tap-popup-container,.google-one-tap__module,.google-one-tap-modal-div,#amp_floatingAdDiv,#ez-content-blocker-container) {display:none!important;min-height:0!important;height:0!important;}</style><style>:is([id*='google_ads_iframe'],[id*='taboola-'],.taboolaHeight,.taboola-placeholder,#top-ad,#credential_picker_container,#credentials-picker-container,#credential_picker_iframe,[id*='google-one-tap-iframe'],#google-one-tap-popup-container,.google-one-tap__module,.google-one-tap-modal-div,#amp_floatingAdDiv,#ez-content-blocker-container) {display:none!important;min-height:0!important;height:0!important;}</style></head>
 <body>
 
     <div class="player-header">
@@ -328,6 +330,8 @@
                 <button id="externalVid" class="external-top-btn" onclick="openExternal()" style="display: none;">خارجي ↗</button>
                 <button id="copyLinkBtn" class="copy-top-btn" onclick="copyCurrentLink()" style="display: none;">نسخ الرابط 🔗</button>
                 
+                <button id="autoSwitchBtn" class="nav-btn" onclick="toggleAutoSwitch()" style="background-color: #e67e22;">تقليب تلقائي ⏱️</button>
+
                 <button class="nav-btn" onclick="prevStream()">الســـــــــــــــــــابق ⏮️</button>
                 <button class="nav-btn" onclick="nextStream()">التـــــــــــــــــــــــــــــــــــــــــــــالي ⏭️</button>
                 <button class="rotate-btn" onclick="toggleRotation()">تدوير 🔄</button>
@@ -336,18 +340,25 @@
             <button id="adblockBtn" class="adblock-btn" onclick="toggleAdBlock()">🛡️ المانع (شغال)</button>
         </div>
 
-        <div class="tabs-container" id="mainTabs"><div class="tabs-container" id="mainTabs">
-            <button id="btn1" class="tab-btn" data-link="https://live.aflam4you.net/zremb472.php?vid=74&amp;aflam_s=1&amp;aflam_w=360&amp;aflam_h=250&amp;aflam_k=11623324" onclick="playStream(this)">قناة 6 بس</button><button id="btn1" class="tab-btn" data-link="https://15.wwwkoora.com/albaplayer/bein-sports-hd-6/" onclick="playStream(this)">قناة 6 بس</button>
-            <button id="btn2" class="tab-btn" data-link="https://p4.panda-live.live/albaplayer/bein-6/" onclick="playStream(this)">6</button>
-            <button id="btn3" class="tab-btn" data-link="https://tv12.koora-plus.top/chtv/ch6.php" onclick="playStream(this)">6</button>
-            <button id="btn4" class="tab-btn hd" data-link="https://12.sportsurges.online/albaplayer/bein-6/?serv=1" onclick="playStream(this)">6</button>
-            <button id="btn_new_1775313046421" class="tab-btn" data-link="https://plir.bein4kora.com/albaplayer/1bnnn6/" onclick="playStream(this)">6</button>
-            <button id="btn_new_1775313087333" class="tab-btn" data-link="https://1.simosports.live/splayer/Live6.php" onclick="playStream(this)">6</button>
-            <button id="btn_new_1775313110293" class="tab-btn" data-link="https://spoort.en-yalla.live/albaplayer/sport6/" onclick="playStream(this)">6</button>
-            <button id="btn_new_1775313127961" class="tab-btn" data-link="https://bbb.yallashoot2026.com/albaplayer/sports-6/" onclick="playStream(this)">6</button>
-            <button id="btn_new_1775313144818" class="tab-btn" data-link="https://a8.sia-koora.live/albaplayer/bein-6/" onclick="playStream(this)">6</button>
-            <button id="btn_new_1775313162951" class="tab-btn" data-link="https://vip.kora-top.zip/frame.php?ch=b1&amp;p=12&amp;token=3ee4a19b-5195-4718-9f39-1641c06163cf&amp;kt=1774719427" onclick="playStream(this)">6</button>
-        <button id="btn_new_1775316025265" class="tab-btn" data-link="http://scorpioniptv.com:2052/live/babatayoub/deyswmq/3300.ts" onclick="playStream(this)">6</button><button id="btn_new_1775574348966_0" class="tab-btn" data-link="https://1.simosports.live/splayer/Live6.php" onclick="playStream(this)">+ 1</button><button id="btn_new_1775574348966_1" class="tab-btn" data-link="https://2.simosports.live/splayer/Live6.php" onclick="playStream(this)">+ 2</button><button id="btn_new_1775574348966_2" class="tab-btn" data-link="https://12.sportsurges.online/albaplayer/bein-6/" onclick="playStream(this)">+ 3</button><button id="btn_new_1775574348966_3" class="tab-btn" data-link="https://tv20.koora-plus.top/chtv/ch6.php" onclick="playStream(this)">+ 4</button></div></div>
+        <div class="tabs-container" id="mainTabs"><button class="auto-fetch-btn" id="autoFetchBtn" onclick="playRandomSportsChannel()">
+                ⚽ اكتشاف قناة رياضية من النت
+            </button><button id="btn1" class="tab-btn" data-link="https://live.aflam4you.net/zremb472.php?vid=74&amp;aflam_s=1&amp;aflam_w=360&amp;aflam_h=250&amp;aflam_k=11623324" onclick="playStream(this)">قناة 6 بس</button>
+<button id="btn1" class="tab-btn" data-link="https://15.wwwkoora.com/albaplayer/bein-sports-hd-6/" onclick="playStream(this)">قناة 6 بس</button>
+<button id="btn2" class="tab-btn" data-link="https://p4.panda-live.live/albaplayer/bein-6/" onclick="playStream(this)">6</button>
+<button id="btn3" class="tab-btn" data-link="https://tv12.koora-plus.top/chtv/ch6.php" onclick="playStream(this)">6</button>
+<button id="btn4" class="tab-btn hd" data-link="https://12.sportsurges.online/albaplayer/bein-6/?serv=1" onclick="playStream(this)">6</button>
+<button id="btn_new_1775313046421" class="tab-btn" data-link="https://plir.bein4kora.com/albaplayer/1bnnn6/" onclick="playStream(this)">6</button>
+<button id="btn_new_1775313087333" class="tab-btn" data-link="https://1.simosports.live/splayer/Live6.php" onclick="playStream(this)">6</button>
+<button id="btn_new_1775313110293" class="tab-btn" data-link="https://spoort.en-yalla.live/albaplayer/sport6/" onclick="playStream(this)">6</button>
+<button id="btn_new_1775313127961" class="tab-btn" data-link="https://bbb.yallashoot2026.com/albaplayer/sports-6/" onclick="playStream(this)">6</button>
+<button id="btn_new_1775313144818" class="tab-btn" data-link="https://a8.sia-koora.live/albaplayer/bein-6/" onclick="playStream(this)">6</button>
+<button id="btn_new_1775313162951" class="tab-btn" data-link="https://vip.kora-top.zip/frame.php?ch=b1&amp;p=12&amp;token=3ee4a19b-5195-4718-9f39-1641c06163cf&amp;kt=1774719427" onclick="playStream(this)">6</button>
+<button id="btn_new_1775316025265" class="tab-btn" data-link="http://scorpioniptv.com:2052/live/babatayoub/deyswmq/3300.ts" onclick="playStream(this)">6</button>
+<button id="btn_new_1775574348966_0" class="tab-btn" data-link="https://1.simosports.live/splayer/Live6.php" onclick="playStream(this)">+ 1</button>
+<button id="btn_new_1775574348966_1" class="tab-btn" data-link="https://2.simosports.live/splayer/Live6.php" onclick="playStream(this)">+ 2</button>
+<button id="btn_new_1775574348966_2" class="tab-btn" data-link="https://12.sportsurges.online/albaplayer/bein-6/" onclick="playStream(this)">+ 3</button>
+<button id="btn_new_1775574348966_3" class="tab-btn" data-link="https://tv20.koora-plus.top/chtv/ch6.php" onclick="playStream(this)">+ 4</button>
+</div>
     </div>
 
     <div class="video-wrapper">
@@ -386,22 +397,22 @@
             
             <div class="form-group">
                 <label>اختار الزرار للتعديل أو الحذف:</label>
-                <select id="buttonSelect" onchange="loadButtonData()"><option value="btn1">قناة 6 بس</option><option value="btn1">قناة 6 بس</option><option value="btn2">6</option><option value="btn3">6</option><option value="btn4">6</option><option value="btn_new_1775313046421">6</option><option value="btn_new_1775313087333">6</option><option value="btn_new_1775313110293">6</option><option value="btn_new_1775313127961">6</option><option value="btn_new_1775313144818">6</option><option value="btn_new_1775313162951">6</option><option value="btn_new_1775316025265">6</option><option value="btn_new_1775574348966_0">+ 1</option><option value="btn_new_1775574348966_1">+ 2</option><option value="btn_new_1775574348966_2">+ 3</option><option value="btn_new_1775574348966_3">+ 4</option></select>
+                <select id="buttonSelect" onchange="loadButtonData()" data-ddg-inputtype="unknown"><option value="btn1">قناة 6 بس</option><option value="btn1">قناة 6 بس</option><option value="btn2">6</option><option value="btn3">6</option><option value="btn4">6</option><option value="btn_new_1775313046421">6</option><option value="btn_new_1775313087333">6</option><option value="btn_new_1775313110293">6</option><option value="btn_new_1775313127961">6</option><option value="btn_new_1775313144818">6</option><option value="btn_new_1775313162951">6</option><option value="btn_new_1775316025265">6</option><option value="btn_new_1775574348966_0">+ 1</option><option value="btn_new_1775574348966_1">+ 2</option><option value="btn_new_1775574348966_2">+ 3</option><option value="btn_new_1775574348966_3">+ 4</option></select>
             </div>
 
             <div class="form-group">
                 <label>الاسم الجديد:</label>
-                <input type="text" id="editName">
+                <input type="text" id="editName" data-ddg-inputtype="unknown">
             </div>
 
             <div class="form-group">
                 <label>اللينك الجديد:</label>
-                <input type="text" id="editLink">
+                <input type="text" id="editLink" data-ddg-inputtype="unknown">
             </div>
 
             <div class="form-group">
                 <label>طريقة الفتح:</label>
-                <select id="editOpenTarget">
+                <select id="editOpenTarget" data-ddg-inputtype="unknown">
                     <option value="internal">داخلي (داخل المشغل)</option>
                     <option value="external">خارجي (في نافذة جديدة)</option>
                 </select>
@@ -424,6 +435,24 @@
     <script>
         // --- متغيرات ونظام التحديد ---
         let isSelectionMode = false;
+        let autoSkipTimer = null; // المضاف حديثاً للانتقال التلقائي
+        let autoSwitchInterval = null; // المتغير الجديد للتقليب التلقائي المخصص
+
+        function toggleAutoSwitch() {
+            let btn = document.getElementById('autoSwitchBtn');
+            if (autoSwitchInterval) {
+                clearInterval(autoSwitchInterval);
+                autoSwitchInterval = null;
+                btn.style.backgroundColor = '#e67e22'; // لون مقفول
+                btn.innerText = 'تقليب تلقائي ⏱️';
+            } else {
+                autoSwitchInterval = setInterval(() => {
+                    nextStream();
+                }, 6000); // 6 ثواني
+                btn.style.backgroundColor = '#27ae60'; // لون شغال (أخضر)
+                btn.innerText = 'التقليب شغال ⏱️';
+            }
+        }
 
         function toggleSelectionMode() {
             isSelectionMode = !isSelectionMode;
@@ -614,7 +643,7 @@
             if(currentSrc && currentSrc !== window.location.href) iframe.src = currentSrc;
         }
 
-        // --- دالة التشغيل المُحدثة ---
+        // --- دالة التشغيل المُحدثة (بالفحص الذكي للسيرفرات الميتة) ---
         function playStream(btnElement) {
             if (isSelectionMode && btnElement.id !== 'autoFetchBtn') {
                 btnElement.classList.toggle('selected-channel');
@@ -623,17 +652,42 @@
             }
 
             let link = btnElement.getAttribute('data-link');
-            // قراءة نوع الفتح (داخلي أو خارجي)
             let target = btnElement.getAttribute('data-open') || 'internal'; 
 
             if(!link) return;
 
             if (target === 'external') {
                 window.open(link, '_blank');
-                return; // إيقاف التنفيذ عشان ميفتحش في المشغل الداخلي
+                return; 
             }
 
-            document.getElementById('videoPlayer').src = link;
+            let iframe = document.getElementById('videoPlayer');
+            
+            // 1. تصفير العدادات القديمة
+            if (autoSkipTimer) clearTimeout(autoSkipTimer);
+            iframe.onload = null;
+            iframe.onerror = null;
+
+            // 2. العداد العادي: لو السيرفر موجود بس تقيل جداً وماردش في 8 ثواني
+            autoSkipTimer = setTimeout(() => {
+                console.log("تخطي: السيرفر خد وقت طويل جداً");
+                nextStream(); 
+            }, 8000); 
+
+            // 3. لو المتصفح حمل حاجة (سواء بث أو صفحة خطأ داخلية)، بنوقف العداد العادي مؤقتاً
+            iframe.onload = function() {
+                clearTimeout(autoSkipTimer);
+            };
+
+            // 4. الحل السحري: فحص نبض السيرفر في الخلفية
+            // ده بيكتشف لو السيرفر واقع تماماً زي حالة (Server Not Found) وبينقل فوراً
+            fetch(link, { mode: 'no-cors' }).catch(() => {
+                console.log("تخطي فوراً: السيرفر غير موجود أو واقع نهائياً!");
+                clearTimeout(autoSkipTimer);
+                nextStream();
+            });
+
+            iframe.src = link;
             document.getElementById('closeVid').style.display = 'inline-block';
             document.getElementById('externalVid').style.display = 'inline-block';
             document.getElementById('copyLinkBtn').style.display = 'inline-block';
@@ -675,7 +729,6 @@
             document.getElementById('settingsModal').style.display = 'none';
         }
 
-        // --- دالة تحميل بيانات الزرار المُحدثة ---
         function loadButtonData() {
             let id = document.getElementById('buttonSelect').value;
             if(!id) return;
@@ -687,7 +740,6 @@
             }
         }
 
-        // --- دالة حفظ التعديلات المُحدثة ---
         function applyChanges() {
             let id = document.getElementById('buttonSelect').value;
             let btn = document.getElementById(id);
@@ -821,6 +873,4 @@
             }, 500); 
         }
     </script>
-
-
 </body></html>
