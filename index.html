@@ -17,7 +17,7 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
-            overflow: auto;
+            overflow: hidden; 
         }
 
         /* شريط التحكم العلوي للمشغل */
@@ -77,7 +77,7 @@
             touch-action: manipulation;
         }
 
-        /* ستايل مدخل الثواني الجديد */
+        /* ستايل مدخل الثواني */
         .interval-input-group {
             display: flex;
             align-items: center;
@@ -98,6 +98,44 @@
             font-weight: bold;
         }
 
+        /* ستايل مدخل التشغيل المباشر */
+        .direct-input-group {
+            display: flex;
+            align-items: center;
+            background: rgba(44, 62, 80, 0.8);
+            padding: 4px 8px;
+            border-radius: 4px;
+            gap: 5px;
+            border: 1px solid rgba(52, 73, 94, 0.8);
+        }
+        .direct-input-group input {
+            width: 150px;
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            border: 1px solid #555;
+            border-radius: 3px;
+            padding: 4px;
+            font-size: 12px;
+            direction: ltr;
+        }
+        .direct-input-group input::placeholder {
+            color: #aaa;
+            direction: rtl;
+        }
+
+        /* شارات الحالة والجودة */
+        .status-badge, .quality-badge {
+            background: rgba(44, 62, 80, 0.9);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: bold;
+            border: 1px solid rgba(52, 73, 94, 0.8);
+            display: flex;
+            align-items: center;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+        }
+
         .nav-btn { background-color: rgba(52, 152, 219, 0.9); }
         .nav-btn:hover { background-color: #2980b9; }
         .rotate-btn { background-color: rgba(155, 89, 182, 0.9); }
@@ -111,9 +149,10 @@
         .adblock-btn { background-color: rgba(39, 174, 96, 0.9); }
         .adblock-btn.disabled { background-color: rgba(192, 57, 43, 0.9); }
 
+        /* ستايل السيرفرات المربعة */
         .tabs-container {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             overflow-x: auto;
             white-space: nowrap;
             padding-bottom: 5px;
@@ -123,12 +162,12 @@
         .tabs-container::-webkit-scrollbar-thumb { background: rgba(68, 68, 68, 0.8); border-radius: 4px; }
 
         .tab-btn {
-            background-color: rgba(0, 139, 139, 0.9);
-            color: white;
-            border: none;
-            padding: 6px 15px;
+            background-color: transparent;
+            color: #f1c40f; 
+            border: 1px solid #ccc;
+            padding: 8px 20px;
             font-size: 14px;
-            border-radius: 4px;
+            border-radius: 0px; 
             cursor: pointer;
             font-weight: bold;
             transition: 0.3s;
@@ -136,24 +175,41 @@
             touch-action: manipulation;
         }
 
+        .tab-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
         .tab-btn.active {
-            background-color: #27ae60 !important;
-            border: 2px solid #fff;
-            box-shadow: 0 0 10px rgba(39, 174, 96, 0.8);
+            background-color: #c0392b !important; 
+            color: white !important;
+            border: 1px solid white;
+            box-shadow: none; 
         }
 
         .tab-btn.selected-channel {
             background-color: #8e44ad !important;
             border: 2px dashed #f1c40f;
-            box-shadow: 0 0 10px rgba(142, 68, 173, 0.8);
             transform: scale(0.95);
         }
 
+        /* التصغير الافتراضي 50% */
         .video-wrapper {
             position: relative;
             width: 100%;
             flex: 1; 
             background-color: #000;
+            --zoom-level: 0.5; 
+        }
+
+        .video-wrapper iframe,
+        .video-wrapper video {
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            transform: scale(var(--zoom-level));
+            transition: transform 0.3s ease-in-out;
+            transform-origin: center center;
         }
 
         .video-wrapper.rotated iframe,
@@ -163,17 +219,9 @@
             left: 50%;
             width: calc(100vh - 75px);
             height: 100vw;
-            transform: translate(-50%, -50%) rotate(90deg);
+            transform: translate(-50%, -50%) rotate(90deg) scale(var(--zoom-level));
         }
 
-        iframe, video {
-            width: 100%;
-            height: 100%;
-            border: none;
-            outline: none;
-        }
-
-        /* إخفاء المشغلات افتراضياً حتى يتم الاختيار */
         #iframePlayer, #videoPlayer {
             display: none;
         }
@@ -292,7 +340,6 @@
         .s-del-btn { background-color: #e74c3c; }
         .s-close-btn { background-color: #c0392b; border: 1px solid #ff7675; }
 
-        /* ستايل زر إخفاء وإظهار الشريط الجديد */
         .toggle-header-btn {
             position: fixed;
             top: 10px;
@@ -328,10 +375,27 @@
             </div>
             
             <div class="nav-buttons">
+                <div id="streamStatusBadge" class="status-badge" style="color: rgb(46, 204, 113);">🟢 شغال</div>
+                <div id="streamQualityBadge" class="quality-badge" style="display: none; color: rgb(52, 152, 219);">📺 --</div>
+
                 <div class="interval-input-group">
                     <label>المدة (5-60ث):</label>
-                    <input type="number" id="autoSwitchIntervalInput" value="20" min="5" max="60" onchange="updateAutoSwitchInterval()" data-ddg-inputtype="unknown">
+                    <input type="number" id="autoSwitchIntervalInput" value="20" min="5" max="60" onchange="updateAutoSwitchInterval()">
                 </div>
+
+                <div class="direct-input-group">
+                    <input type="text" id="directLinkInput" placeholder="رابط m3u8 أو صفحة...">
+                    <button class="nav-btn" style="padding: 4px 8px; font-size: 12px; background-color: #8e44ad;" onclick="playDirectLink()">▶️ تشغيل</button>
+                </div>
+
+                <button id="zoomInBtn" class="nav-btn" style="background-color: #34495e;" title="تكبير">تكبير ➕</button>
+                <button id="zoomOutBtn" class="nav-btn" style="background-color: #34495e;" title="تصغير">تصغير ➖</button>
+                
+                <button id="zoomResetBtn" class="nav-btn" style="background-color: #7f8c8d; color: white;" title="الحجم المُصغر">50%</button>
+                <button id="zoom100Btn" class="nav-btn" style="background-color: #95a5a6; color: white;" title="الحجم الطبيعي">100%</button>
+                
+                <button id="muteBtn" class="nav-btn" style="background-color: #2c3e50;" onclick="toggleMute()">🔊 الصوت</button>
+                <button id="fullscreenBtn" class="nav-btn" style="background-color: #2c3e50;" onclick="toggleFullScreen()">🔲 ملء الشاشة</button>
 
                 <button id="closeVid" class="close-top-btn" onclick="closePlayer()" style="display: none;">إغلاق ✖</button>
                 <button id="externalVid" class="external-top-btn" onclick="openExternal()" style="display: none;">خارجي ↗</button>
@@ -342,11 +406,10 @@
                 <button class="nav-btn" onclick="prevStream()">الســـــــــــــــــــابق ⏮️</button>
                 <button class="nav-btn" onclick="nextStream()">التـــــــــــــــــــــــــــــــــــــــــــــالي ⏭️</button>
                 <button class="rotate-btn" onclick="toggleRotation()">تدوير 🔄</button>
-                <!-- تعديل: زرار Deny Popups الأول -->
+                
                 <button class="adblock-btn deny-btn" onclick="toggleDenyPopups()">🚫 Deny Popups (مفعل)</button>
             </div>
 
-            <!-- تعديل: زرار Deny Popups الثاني -->
             <button class="adblock-btn deny-btn" onclick="toggleDenyPopups()">🚫 Deny Popups (مفعل)</button>
         </div>
 
@@ -371,11 +434,10 @@
 <button id="btn_new_1775574348966_0" class="tab-btn" data-link="https://1.simosports.live/splayer/Live6.php" onclick="playStream(this)">+ 1</button>
 <button id="btn_new_1775574348966_1" class="tab-btn" data-link="https://2.simosports.live/splayer/Live6.php" onclick="playStream(this)">+ 2</button>
 <button id="btn_new_1775574348966_2" class="tab-btn" data-link="https://12.sportsurges.online/albaplayer/bein-6/" onclick="playStream(this)">+ 3</button>
-<button id="btn_new_1775574348966_3" class="tab-btn" data-link="https://tv20.koora-plus.top/chtv/ch6.php" onclick="playStream(this)">+ 4</button>
-</div>
+<button id="btn_new_1775574348966_3" class="tab-btn" data-link="https://tv20.koora-plus.top/chtv/ch6.php" onclick="playStream(this)">+ 4</button></div>
     </div>
 
-    <div class="video-wrapper">
+    <div class="video-wrapper" style="--zoom-level: 0.5;">
         <iframe id="iframePlayer" src="" allowfullscreen="" style="display: none;" sandbox="allow-scripts allow-same-origin"></iframe>
         <video id="videoPlayer" controls="" autoplay="" playsinline="" style="display: none;"></video>
     </div>
@@ -388,6 +450,7 @@
         <button class="s-btn s-dup-btn" onclick="duplicateSelected()">تكرار 📑</button>
         <button class="s-btn s-link-btn" onclick="copySelectedLinks()">روابط 🔗</button>
         <button class="s-btn s-code-btn" onclick="copySelectedCodes()">أكواد 📄</button>
+        <button class="s-btn" style="background-color: #16a085; color: white;" onclick="exportSelectedToM3U()">M3U8 📥</button>
         <button class="s-btn s-del-btn" onclick="deleteSelected()">حذف 🗑️</button>
         <button class="s-btn s-close-btn" onclick="toggleSelectionMode()">إغلاق ❌</button>
     </div>
@@ -408,19 +471,19 @@
             <h3 style="margin-top:0">إعدادات البث المباشر</h3>
             <div class="form-group">
                 <label>اختار الزرار للتعديل أو الحذف:</label>
-                <select id="buttonSelect" onchange="loadButtonData()" data-ddg-inputtype="unknown"><option value="btn1">قناة 6 بس</option><option value="btn1">قناة 6 بس</option><option value="btn2">6</option><option value="btn_new_1775847589215_0">Iptv</option><option value="btn4">6</option><option value="btn_new_1775313046421">6</option><option value="btn_new_1775313087333">6</option><option value="btn_new_1775313110293">6</option><option value="btn_new_1775313127961">6</option><option value="btn_new_1775313144818">6</option><option value="btn_new_1775313162951">6</option><option value="btn_new_1775849171604_0">fajr 1</option><option value="btn_new_1775849171604_1">fajr 2</option><option value="btn_new_1775849171604_2">fajr 3</option><option value="btn_new_1775849171604_3">fajr 4</option><option value="btn_new_1775849171604_4">fajr 5</option><option value="btn_new_1775849171604_5">fajr 6</option><option value="btn_new_1775327957708">Fajr 1</option><option value="btn_new_1775574348966_0">+ 1</option><option value="btn_new_1775574348966_1">+ 2</option><option value="btn_new_1775574348966_2">+ 3</option><option value="btn_new_1775574348966_3">+ 4</option></select>
+                <select id="buttonSelect" onchange="loadButtonData()"><option value="btn1">قناة 6 بس</option><option value="btn1">قناة 6 بس</option><option value="btn2">6</option><option value="btn_new_1775847589215_0">Iptv</option><option value="btn4">6</option><option value="btn_new_1775313046421">6</option><option value="btn_new_1775313087333">6</option><option value="btn_new_1775313110293">6</option><option value="btn_new_1775313127961">6</option><option value="btn_new_1775313144818">6</option><option value="btn_new_1775313162951">6</option><option value="btn_new_1775849171604_0">fajr 1</option><option value="btn_new_1775849171604_1">fajr 2</option><option value="btn_new_1775849171604_2">fajr 3</option><option value="btn_new_1775849171604_3">fajr 4</option><option value="btn_new_1775849171604_4">fajr 5</option><option value="btn_new_1775849171604_5">fajr 6</option><option value="btn_new_1775327957708">Fajr 1</option><option value="btn_new_1775574348966_0">+ 1</option><option value="btn_new_1775574348966_1">+ 2</option><option value="btn_new_1775574348966_2">+ 3</option><option value="btn_new_1775574348966_3">+ 4</option></select>
             </div>
             <div class="form-group">
                 <label>الاسم الجديد:</label>
-                <input type="text" id="editName" data-ddg-inputtype="unknown">
+                <input type="text" id="editName">
             </div>
             <div class="form-group">
                 <label>اللينك الجديد:</label>
-                <input type="text" id="editLink" data-ddg-inputtype="unknown">
+                <input type="text" id="editLink">
             </div>
             <div class="form-group">
                 <label>طريقة الفتح:</label>
-                <select id="editOpenTarget" data-ddg-inputtype="unknown">
+                <select id="editOpenTarget">
                     <option value="internal">داخلي (داخل المشغل)</option>
                     <option value="external">خارجي (في نافذة جديدة)</option>
                 </select>
@@ -434,17 +497,121 @@
                 <button class="add-channel-btn" onclick="addNewChannel()">➕ إضافة قناة بث جديدة</button>
                 <button class="download-btn" onclick="downloadFullFile()">💾 حفظ الملف</button>
                 <button class="copy-btn" onclick="copyFullCode()">📋 نسخ الكود</button>
+                <button class="download-btn" style="background-color: #16a085;" onclick="exportToM3U()">📁 تحميل M3U8</button>
             </div>
         </div>
     </div>
 
     <script>
+        // حفظ دالة الفتح الأصلية
+        const originalWindowOpen = window.open;
+
+        window.open = function(url) {
+            if (url) {
+                let tempBtn = document.createElement("button");
+                tempBtn.setAttribute("data-link", url);
+                tempBtn.setAttribute("data-open", "internal");
+                playStream(tempBtn);
+            }
+            return null;
+        };
+
+        document.addEventListener('click', function(e) {
+            let link = e.target.closest('a');
+            if (link && (link.getAttribute('target') === '_blank' || link.target === '_blank')) {
+                e.preventDefault();
+                let tempBtn = document.createElement("button");
+                tempBtn.setAttribute("data-link", link.href);
+                tempBtn.setAttribute("data-open", "internal");
+                playStream(tempBtn);
+            }
+        });
+        // =======================================================================
+
         let isSelectionMode = false;
         let autoSwitchInterval = null; 
         let remainingSeconds = 20; 
         let activeLinkType = 'iframe'; 
+        
+        let currentZoom = 0.5; 
+        const zoomStep = 0.1;
 
-        // دالة لتحديث الثواني المختارة والتأكد من الحدود
+        // === دوال التحكم في حالة البث والجودة ===
+        function updateStreamStatus(state) {
+            let statusBadge = document.getElementById('streamStatusBadge');
+            if(state === 'loading') {
+                statusBadge.innerHTML = '⏳ بيحمل...';
+                statusBadge.style.color = '#f1c40f';
+            } else if (state === 'playing') {
+                statusBadge.innerHTML = '🟢 شغال';
+                statusBadge.style.color = '#2ecc71';
+            } else if (state === 'error') {
+                statusBadge.innerHTML = '🔴 قاطع / خطأ';
+                statusBadge.style.color = '#e74c3c';
+            } else if (state === 'idle') {
+                statusBadge.innerHTML = '⚪ في الانتظار';
+                statusBadge.style.color = '#bdc3c7';
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            let video = document.getElementById('videoPlayer');
+            let iframe = document.getElementById('iframePlayer');
+            
+            video.addEventListener('playing', () => updateStreamStatus('playing'));
+            video.addEventListener('waiting', () => updateStreamStatus('loading'));
+            video.addEventListener('error', () => updateStreamStatus('error'));
+
+            iframe.addEventListener('load', () => {
+                if(activeLinkType === 'iframe' && iframe.src) {
+                    updateStreamStatus('playing');
+                }
+            });
+        });
+        // ===================================
+
+        function playDirectLink() {
+            let link = document.getElementById('directLinkInput').value.trim();
+            if (!link) {
+                alert("حط الرابط الأول عشان يشتغل!");
+                return;
+            }
+            let tempBtn = document.createElement("button");
+            tempBtn.setAttribute("data-link", link);
+            tempBtn.setAttribute("data-open", "internal");
+            playStream(tempBtn);
+        }
+
+        document.getElementById('zoomInBtn').addEventListener('click', () => {
+            currentZoom += zoomStep;
+            updateZoom();
+        });
+
+        document.getElementById('zoomOutBtn').addEventListener('click', () => {
+            if (currentZoom > 0.1) { 
+                currentZoom -= zoomStep;
+                updateZoom();
+            }
+        });
+
+        // زرار الـ 50% بيرجع الحجم لـ 0.5
+        document.getElementById('zoomResetBtn').addEventListener('click', () => {
+            currentZoom = 0.5; 
+            updateZoom();
+        });
+
+        // زرار الـ 100% بيكبر الحجم لـ 1.0
+        document.getElementById('zoom100Btn').addEventListener('click', () => {
+            currentZoom = 1; 
+            updateZoom();
+        });
+
+        function updateZoom() {
+            document.querySelector('.video-wrapper').style.setProperty('--zoom-level', currentZoom);
+            // لو عايز زرار الـ 50% يفضل مكتوب عليه 50% وميتغيرش رقمه بنسيب السطر ده ملغي أو نمسحه
+            // وثبتنا أسماء الزراير فمفيش داعي الرقم يتغير جواها
+        }
+
         function updateAutoSwitchInterval() {
             let input = document.getElementById('autoSwitchIntervalInput');
             let val = parseInt(input.value);
@@ -452,7 +619,6 @@
             if (val > 60) val = 60;
             input.value = val;
             
-            // إذا كان التقليب شغال، نحدث العداد فوراً
             if (autoSwitchInterval) {
                 remainingSeconds = val;
                 document.getElementById('autoSwitchBtn').innerText = `شغال (${remainingSeconds}) ⏱️`;
@@ -628,22 +794,19 @@
             if(firstBtn) playStream(firstBtn);
         };
 
-        // التعديل هنا: برمجة زرار منع النوافذ المنبثقة (Deny Popups)
         let denyPopupsEnabled = true;
         function toggleDenyPopups() {
             let iframe = document.getElementById('iframePlayer');
-            let btns = document.querySelectorAll('.deny-btn'); // بيستهدف الزرارين سوا
+            let btns = document.querySelectorAll('.deny-btn');
             denyPopupsEnabled = !denyPopupsEnabled;
             
             if (denyPopupsEnabled) {
-                // تفعيل المنع: نحط خاصية الـ sandbox
                 iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
                 btns.forEach(btn => {
                     btn.innerText = '🚫 Deny Popups (مفعل)';
                     btn.classList.remove('disabled');
                 });
             } else {
-                // إلغاء المنع: نشيل الـ sandbox عشان الـ iframe يفتح اللي هو عايزه
                 iframe.removeAttribute('sandbox');
                 btns.forEach(btn => {
                     btn.innerText = '⚠️ Deny Popups (ملغي)';
@@ -662,10 +825,22 @@
             let target = btnElement.getAttribute('data-open') || 'internal'; 
             if(!originalLink) return;
 
+            document.getElementById('directLinkInput').value = originalLink;
+
             if (target === 'external') {
-                window.open(originalLink, '_blank');
+                originalWindowOpen(originalLink, '_blank');
                 return; 
             }
+
+            updateStreamStatus('loading');
+            let qualityBadge = document.getElementById('streamQualityBadge');
+            qualityBadge.style.display = 'none';
+            qualityBadge.innerHTML = '📺 --';
+
+            currentZoom = 0.5;
+            updateZoom();
+            
+            document.getElementById('muteBtn').innerText = '🔊 الصوت';
 
             let iframe = document.getElementById('iframePlayer');
             let video = document.getElementById('videoPlayer');
@@ -687,11 +862,27 @@
                 activeLinkType = 'video';
                 iframe.style.display = 'none';
                 video.style.display = 'block';
+                video.muted = false; 
                 
                 if (Hls.isSupported() && linkToPlay.includes('.m3u8')) {
                     window.hls = new Hls();
                     window.hls.loadSource(linkToPlay);
                     window.hls.attachMedia(video);
+                    
+                    window.hls.on(Hls.Events.LEVEL_SWITCHED, function(event, data) {
+                        let level = window.hls.levels[data.level];
+                        if(level && level.height) {
+                            qualityBadge.style.display = 'flex';
+                            qualityBadge.innerHTML = `📺 ${level.height}p`;
+                        }
+                    });
+
+                    window.hls.on(Hls.Events.ERROR, function(event, data) {
+                        if (data.fatal) {
+                            updateStreamStatus('error');
+                        }
+                    });
+
                     window.hls.on(Hls.Events.MANIFEST_PARSED, function() {
                         let playPromise = video.play();
                         if (playPromise !== undefined) {
@@ -727,7 +918,9 @@
             document.getElementById('externalVid').style.display = 'inline-block';
             document.getElementById('copyLinkBtn').style.display = 'inline-block';
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            btnElement.classList.add('active');
+            if(btnElement.id) {
+                btnElement.classList.add('active');
+            }
         }
 
         function closePlayer() {
@@ -741,6 +934,8 @@
             if (window.hls) {
                 try { window.hls.destroy(); } catch(e) {}
             }
+            updateStreamStatus('idle');
+            document.getElementById('streamQualityBadge').style.display = 'none';
             document.getElementById('closeVid').style.display = 'none';
             document.getElementById('externalVid').style.display = 'none';
             document.getElementById('copyLinkBtn').style.display = 'none';
@@ -749,12 +944,20 @@
 
         function openExternal() {
             let activeBtn = document.querySelector('.tab-btn.active');
-            if (activeBtn) window.open(activeBtn.getAttribute('data-link'), '_blank');
+            if (activeBtn) originalWindowOpen(activeBtn.getAttribute('data-link'), '_blank');
+            else {
+                let directLink = document.getElementById('directLinkInput').value.trim();
+                if(directLink) originalWindowOpen(directLink, '_blank');
+            }
         }
 
         function copyCurrentLink() {
             let activeBtn = document.querySelector('.tab-btn.active');
             if (activeBtn) triggerCopy(activeBtn.getAttribute('data-link'), "تم النسخ!");
+            else {
+                let directLink = document.getElementById('directLinkInput').value.trim();
+                if(directLink) triggerCopy(directLink, "تم النسخ!");
+            }
         }
 
         function openModal() {
@@ -832,6 +1035,44 @@
             triggerCopy(content, "تم نسخ الكود بالكامل!");
         }
 
+        function exportToM3U() {
+            closeModal();
+            let m3uContent = "#EXTM3U\n";
+            document.querySelectorAll('#mainTabs .tab-btn:not(#autoFetchBtn)').forEach(btn => {
+                let name = btn.innerText.trim();
+                let link = btn.getAttribute('data-link');
+                if (link) {
+                    m3uContent += `#EXTINF:-1,${name}\n${link}\n`;
+                }
+            });
+
+            let blob = new Blob([m3uContent], { type: 'audio/x-mpegurl' });
+            let a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'playlist.m3u8';
+            a.click();
+        }
+
+        function exportSelectedToM3U() {
+            let selected = document.querySelectorAll('#mainTabs .tab-btn.selected-channel');
+            if (selected.length === 0) { alert("حدد قنوات الأول عشان تعملها ملف M3U8!"); return; }
+            
+            let m3uContent = "#EXTM3U\n";
+            selected.forEach(btn => {
+                let name = btn.innerText.trim();
+                let link = btn.getAttribute('data-link');
+                if (link) {
+                    m3uContent += `#EXTINF:-1,${name}\n${link}\n`;
+                }
+            });
+
+            let blob = new Blob([m3uContent], { type: 'audio/x-mpegurl' });
+            let a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'selected_playlist.m3u8';
+            a.click();
+        }
+
         function nextStream() {
             let tabs = Array.from(document.querySelectorAll('#mainTabs .tab-btn:not(#autoFetchBtn)'));
             if(tabs.length === 0) return;
@@ -853,5 +1094,38 @@
         }
 
         function toggleRotation() { document.querySelector('.video-wrapper').classList.toggle('rotated'); }
+
+        function toggleMute() {
+            let video = document.getElementById('videoPlayer');
+            let muteBtn = document.getElementById('muteBtn');
+            if (activeLinkType === 'video') {
+                video.muted = !video.muted;
+                muteBtn.innerText = video.muted ? '🔇 مكتوم' : '🔊 الصوت';
+            } else {
+                alert("زرار الصوت بيشتغل بس مع الروابط المباشرة (m3u8 أو mp4). المواقع الكاملة لازم تتحكم في صوتها من المشغل بتاعهم جوه الصفحة.");
+            }
+        }
+
+        function toggleFullScreen() {
+            let wrapper = document.querySelector('.video-wrapper');
+            if (!document.fullscreenElement) {
+                if (wrapper.requestFullscreen) {
+                    wrapper.requestFullscreen();
+                } else if (wrapper.webkitRequestFullscreen) { 
+                    wrapper.webkitRequestFullscreen();
+                } else if (wrapper.msRequestFullscreen) { 
+                    wrapper.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) { 
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) { 
+                    document.msExitFullscreen();
+                }
+            }
+        }
     </script>
+
 </body></html>
